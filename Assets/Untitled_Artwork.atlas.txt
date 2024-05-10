@@ -1,0 +1,62 @@
+Untitled_Artwork.png
+size:1954,1398
+filter:Linear,Linear
+pma:true
+Arm_Left
+bounds:584,531,343,551
+rotate:90
+Brow L
+bounds:1078,882,88,49
+rotate:90
+Brow R
+bounds:501,537,99,70
+rotate:90
+Cheeks
+bounds:1592,690,280,53
+rotate:90
+Chestplate
+bounds:1578,38,366,299
+Ear L
+bounds:1719,383,128,96
+Ear R
+bounds:833,9,201,121
+Eye L
+bounds:1592,631,32,57
+Eye R
+bounds:1084,467,39,62
+From selection
+bounds:2,2,634,497
+rotate:90
+Hair_back
+bounds:584,876,492,520
+Hair_front
+bounds:1078,972,424,583
+rotate:90
+Hair_pin
+bounds:833,132,104,227
+rotate:90
+Hair_top
+bounds:501,13,223,330
+rotate:90
+Hand_right
+bounds:501,238,291,581
+rotate:90
+Head_base
+bounds:1137,591,379,453
+rotate:90
+Leg_left
+bounds:1663,600,261,390
+Leg_right
+bounds:1137,339,250,580
+rotate:90
+Nose
+bounds:1062,200,36,20
+rotate:90
+Scarf_front
+bounds:1719,481,175,117
+Skirt_Base
+bounds:2,638,580,758
+Skirt_attachment_left
+bounds:1084,16,492,321
+Skirt_attachment_right
+bounds:1663,992,289,404

@@ -53,20 +53,7 @@ public class SpineBasicCommands : MonoBehaviour
             // 'SetAnimation' is used to immediatelly switch out any current animations for a new one
             TrackEntry entry = animationState.SetAnimation(0, runAnimation, true);
             // used to wait a specified amount of seconds inside a coroutine
-            yield return new WaitForSeconds(2f);
-
-            animationState.SetAnimation(0, runAnimation, true);
-            yield return new WaitForSeconds(1.5f);
-
-            animationState.SetAnimation(0, idleAnimation, true);
-            yield return new WaitForSeconds(1.5f);
-
-            // flipping the skeleton on the x-Axis means flipping the character
-            skeleton.ScaleX *= -1;
-            //animationState.SetAnimation(0, turnAnimation, false);
-            // 'AddAnimation' adds the animation into a queue, it gets played as soon as the animation before is finished
-            animationState.AddAnimation(0, idleAnimation, true, 0);
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSpineAnimationEnd(entry);
         }
     }
 }
