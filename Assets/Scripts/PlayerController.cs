@@ -27,6 +27,8 @@ public class PlayerController : MonoBehaviour
     private bool dashing;
     private bool jumping;
     private Animator _anim;
+    public ParticleSystem dust;
+    public ParticleSystem dashTrail;
 
     private void Start()
     {
@@ -58,12 +60,20 @@ public class PlayerController : MonoBehaviour
         {
             _spineAnim.FlipSprite();
             _isFlipped = true;
+            if (playerJumpCount >= 2)
+            {
+                dust.Play();
+            }
         }
 
         if(_playersMovementDirection > 0 && _isFlipped)
         {
             _isFlipped = false;
             _spineAnim.FlipSprite();
+            if (playerJumpCount >= 2)
+            {
+                dust.Play();
+            }
         }
 
         if (!isMovementStopped)
@@ -92,6 +102,11 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator PlayerDash()
     {
+        dashTrail.Play();
+        if (playerJumpCount >= 2)
+        {
+            dust.Play();
+        }
         dashing = true;
         playerSpeed = 10;
         currentState = PlayerStates.dashing;
@@ -107,6 +122,10 @@ public class PlayerController : MonoBehaviour
     {
         if (playerJumpCount > 0 && !dashing)
         {
+            if(playerJumpCount >= 2)
+            {
+                dust.Play();
+            }
             jumping = true;
             _anim.Play("Player_Jump"); 
         }

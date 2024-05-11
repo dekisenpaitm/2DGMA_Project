@@ -26,6 +26,7 @@ public class SpineAnimationController : MonoBehaviour
     private TrackEntry _spineAnim;
 
     private PlayerController _player;
+    private FlipEffectController _flipEffect;
     private PlayerStates current;
 
 
@@ -40,6 +41,7 @@ public class SpineAnimationController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _flipEffect = FindObjectOfType<FlipEffectController>(includeInactive: true);
         _player = FindObjectOfType<PlayerController>(includeInactive: true);
         skeletonAnimation = GetComponent<SkeletonAnimation>();
         animationState = skeletonAnimation.AnimationState;
@@ -92,6 +94,7 @@ public class SpineAnimationController : MonoBehaviour
 
     public void FlipSprite()
     {
+        _flipEffect.FlipEffects();
         skeleton.ScaleX *= -1;
     }
 }
