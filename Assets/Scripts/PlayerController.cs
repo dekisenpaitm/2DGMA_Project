@@ -150,20 +150,22 @@ public class PlayerController : MonoBehaviour
         var ownCenter = contact.collider.bounds.center;
         var ownBounds = contact.collider.bounds;
 
-        // Reset movement stop when hitting the floor
         if (collision.gameObject.CompareTag("Floor"))
         {
-            // Check if the contact point is significantly above the center, indicating a non-leg hit
             if (contactPoint.y > ownCenter.y + ownBounds.extents.y * 0.5)
             {
                 Debug.LogError("HIT MY HEAD");
-                isMovementStopped = true;  // Stop movement if hit with an upper part of the bod
+                isMovementStopped = true; 
             }
             Debug.Log(isMovementStopped);
-            // Check if the contact point is at the top part of the collider (assuming legs are at the bottom)
+           
             if (contactPoint.y > ownCenter.y)
             {
-                playerJumpCount = 2;  // Reset jump count if hit with legs
+                if(playerJumpCount < 2 && contactPoint.y > ownCenter.y - ownBounds.extents.y * 0.5)
+                {
+                    _anim.Play("Player_Land");
+                }
+                playerJumpCount = 2;
                 isMovementStopped = false;
             }
         }
