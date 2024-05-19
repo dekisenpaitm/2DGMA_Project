@@ -29,9 +29,12 @@ public class PlayerController : MonoBehaviour
     private Animator _anim;
     public ParticleSystem dust;
     public ParticleSystem dashTrail;
+    public SmoothCameraFollow cam;
+
 
     private void Start()
     {
+        cam = FindObjectOfType<SmoothCameraFollow>();
         _anim = GetComponent<Animator>();
         _spineAnim = FindObjectOfType<SpineAnimationController>(includeInactive: true);
         currentState = PlayerStates.idle;
@@ -56,6 +59,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+
         if (!_isFlipped && _playersMovementDirection < 0)
         {
             _spineAnim.FlipSprite();
@@ -76,7 +80,12 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (!isMovementStopped)
+
+
+        Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
+        float wiggleRoom = 10;
+        
+        if (!isMovementStopped && screenPos.x >= wiggleRoom)
         {
             //Moving player using player rigid body.
             _playersRigidBody.velocity =
@@ -89,6 +98,10 @@ public class PlayerController : MonoBehaviour
             {
                 currentState = PlayerStates.idle;
             }
+        } else
+        {
+            _playersRigidBody.velocity = Vector2.zero;
+            transform.position = new Vector2(transform.position.x + 0.1f, transform.position.y);
         }
     }
 
@@ -154,14 +167,14 @@ public class PlayerController : MonoBehaviour
         {
             if (contactPoint.y > ownCenter.y + ownBounds.extents.y * 0.5)
             {
-                Debug.LogError("HIT MY HEAD");
-                isMovementStopped = true; 
+                //Debug.LogError("HIT MY HEAD");
+                isMovementStopped = true;
             }
             Debug.Log(isMovementStopped);
-           
+
             if (contactPoint.y > ownCenter.y)
             {
-                if(playerJumpCount < 2 && contactPoint.y > ownCenter.y - ownBounds.extents.y * 0.5)
+                if (playerJumpCount < 2 && contactPoint.y > ownCenter.y - ownBounds.extents.y * 0.5)
                 {
                     _anim.Play("Player_Land");
                 }
@@ -170,5 +183,4 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
 }

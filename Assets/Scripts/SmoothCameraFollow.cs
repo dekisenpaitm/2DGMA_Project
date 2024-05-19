@@ -7,33 +7,51 @@ public class SmoothCameraFollow : MonoBehaviour
     public Transform target;
     public float smoothSpeed = 0.125f;
     public Vector3 offset;
-    private bool _cameraChanged;
     private Vector3 velocity = Vector3.zero;
-    // Start is called before the first frame update
+    public float minY;
+    public float maxY;
+    public bool cameraHitBoundary;
+
     void Start()
     {
         target = FindObjectOfType<PlayerController>().gameObject.transform;
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
-
-        if(target.position.y > 5 && !_cameraChanged)
-        {
-            _cameraChanged = true;
-            offset = new Vector3(offset.x, 0, offset.z);
-        } else if(target.position.y < 5 )
-        {
-            _cameraChanged = false;
-            offset = new Vector3(offset.x, 5, offset.z);
-        }
-
-        if(target == null)
+        if (target == null)
         {
             target = FindObjectOfType<PlayerController>().gameObject.transform;
         }
         Vector3 desiredPosition = target.position + offset;
-        transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, smoothSpeed);
+        if (desiredPosition.x > transform.position.x)
+        {
+            ApplyMove(desiredPosition);
+        } else
+        {
+            RestrictMovement(desiredPosition);
+        }
+        
+    }
+
+    public void ApplyMove(Vector3 desiredPosition)
+    {
+        Vector3 smoothPosition = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, smoothSpeed);
+        smoothPosition.y = checkForYBoundary(smoothPosition.y);
+        transform.position = smoothPosition;
+    }
+
+    public void RestrictMovement(Vector3 desiredPosition)
+    {
+        Vector3 smoothPosition = Vector3.SmoothDamp(transform.position, new Vector3 (transform.position.x,desiredPosition.y, desiredPosition.z), ref velocity, smoothSpeed);
+        smoothPosition.y = checkForYBoundary(smoothPosition.y);
+        transform.position = smoothPosition;
+    }
+    
+
+    private float checkForYBoundary(float proposedY)
+    {
+        return Mathf.Clamp(proposedY, minY, maxY);
     }
 }
+
