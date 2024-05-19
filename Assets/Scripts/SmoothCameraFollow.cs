@@ -17,7 +17,7 @@ public class SmoothCameraFollow : MonoBehaviour
         target = FindObjectOfType<PlayerController>().gameObject.transform;
     }
 
-    void FixedUpdate()
+    void Update()
     {
         if (target == null)
         {

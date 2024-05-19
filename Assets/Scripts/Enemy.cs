@@ -40,6 +40,14 @@ public class Enemy : MonoBehaviour
     [Header("Melee/Ranged")]
     [SerializeField]
     private bool _isMelee;
+    [SerializeField]
+    private float _triggerRange;
+    [SerializeField]
+    private float _idleTime;
+
+    [Header("CanFollow?")]
+    [SerializeField]
+    private bool _canFollow;
 
     private PlayerController _player;
     private Transform[] _pois;
@@ -71,15 +79,14 @@ public class Enemy : MonoBehaviour
 
         _distance = Vector2.Distance(_player.gameObject.transform.position, transform.position);
 
-        if (inTriggerRange())
+        if (_canFollow)
         {
-            FollowPlayer();
-        } 
-        else if (inAttackRange())
-        {
-            AttackPlayer();
+            if (inTriggerRange())
+            {
+                FollowPlayer();
+            }
         }
-        else if (!inTriggerRange())
+        else
         {
             TravelToPoint();
         }
@@ -98,7 +105,7 @@ public class Enemy : MonoBehaviour
     {
         _isIdling = true;
         //_anim.Play("Idle");
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(_idleTime);
         _currentDestination = _pois[randomPoint()];
         _isIdling = false;
     }
@@ -121,7 +128,7 @@ public class Enemy : MonoBehaviour
 
     private bool inTriggerRange()
     {
-        if (_distance <= 10f && _distance >= 1f)
+        if (_distance <= _triggerRange)
         {
             return true;
         }
@@ -135,22 +142,6 @@ public class Enemy : MonoBehaviour
         _isIdling = false;
         //_anim.Play("Move");
         FollowTarget(_player.transform);
-    }
-
-    private bool inAttackRange()
-    {
-        if (_distance <= 1f)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    private void AttackPlayer()
-    {
-        _isIdling = false;
-        //_anim.Play("Attack");
     }
 
     private void TakeDamage(int dmgValue)
