@@ -49,6 +49,21 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private bool _canFollow;
 
+    [Header("HitSetup")]
+    [SerializeField]
+    public Material _far;
+    [SerializeField]
+    public Material _close;
+    public GameObject hitRing;
+    [SerializeField]
+    private float distance;
+    [SerializeField]
+    private bool _hasBeenTriggered;
+    [SerializeField]
+    private bool _closeRing;
+    private bool _hitable;
+
+
     private PlayerController _player;
     private Transform[] _pois;
     private Transform _currentDestination;
@@ -76,6 +91,8 @@ public class Enemy : MonoBehaviour
     {
 
         SetNewDestination();
+        checkPlayerDistance();
+        SetHitRing();
 
         _distance = Vector2.Distance(_player.gameObject.transform.position, transform.position);
 
@@ -90,6 +107,59 @@ public class Enemy : MonoBehaviour
         {
             TravelToPoint();
         }
+    }
+
+    private void SetHitRing()
+    {
+        if(distance < _triggerRange && !_hasBeenTriggered)
+        {
+            _hasBeenTriggered = true;
+            hitRing.SetActive(true);
+        }
+
+        if(hitRing.transform.localScale == new Vector3(0,0,1) && _hasBeenTriggered)
+        {
+            hitRing.SetActive(false);
+        }
+
+        if(hitRing.transform.localScale == new Vector3(0.8f, 0.8f, 1))
+        {
+            _hitable = true;
+            hitRing.GetComponent<SpriteRenderer>().material = _close;
+        }
+
+        if(hitRing.transform.localScale == new Vector3(0.5f, 0.5f, 1))
+        {
+            _hitable = false;
+            hitRing.GetComponent<SpriteRenderer>().material = _far;
+        }
+
+        if (_hasBeenTriggered && !_closeRing)
+        {
+            //hitRing.transform.localScale = new Vector3(distance / 10, distance / 10, 1);
+            StartCoroutine(CloseRing());
+        }
+    }
+
+    private void TryToHit()
+    {
+        //implement kill function here
+    }
+
+    private IEnumerator CloseRing()
+    {
+        _closeRing = true;
+        while(hitRing.transform.localScale != new Vector3(0, 0, 1))
+        {
+            hitRing.transform.localScale += new Vector3(-0.01f,-0.01f, 0);
+            yield return new WaitForSeconds(0.003f);
+        }
+    }
+
+    private float checkPlayerDistance()
+    {
+        distance = Vector2.Distance(new Vector2(transform.position.x, 0), new Vector2(_player.transform.position.x, 0));
+        return distance;
     }
 
     private void SetNewDestination()

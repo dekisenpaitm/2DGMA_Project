@@ -14,22 +14,44 @@ public enum PlayerStates
 
 public class PlayerController : MonoBehaviour
 {
-    public float playerSpeed;
+    #region Movement
+    [Header("Movement_Speed")]
+    [SerializeField]
+    private float playerSpeed;
     private float _playersMovementDirection = 0;
-    private PlayerControlls _inputActionReference;
-    private Rigidbody2D _playersRigidBody; 
-    public float playerJumpForce; 
-    public int playerJumpCount = 2;
     private bool isMovementStopped = false;
+    #endregion
+
+    #region Jump
+    [Header("Jump_Force")]
+    [SerializeField]
+    private float playerJumpForce;
+    [Header("Jump_Count")]
+    [SerializeField]
+    private int playerJumpCount = 2;
+    #endregion
+
+    #region MovementBools
+    [Header("Jump_Force")]
+    [SerializeField]
+    private bool _isFlipped;
+    [SerializeField]
+    private bool dashing;
+    [SerializeField]
+    private bool jumping;
+    #endregion
+
+    #region Referances
     public PlayerStates currentState;
     private SpineAnimationController _spineAnim;
-    private bool _isFlipped;
-    private bool dashing;
-    private bool jumping;
+    private PlayerControlls _inputActionReference;
+    private Rigidbody2D _playersRigidBody;
     private Animator _anim;
     public ParticleSystem dust;
     public ParticleSystem dashTrail;
     public SmoothCameraFollow cam;
+    #endregion
+
 
 
     private void Start()
@@ -38,22 +60,16 @@ public class PlayerController : MonoBehaviour
         _anim = GetComponent<Animator>();
         _spineAnim = FindObjectOfType<SpineAnimationController>(includeInactive: true);
         currentState = PlayerStates.idle;
-        //Getting the reference of the players rigid body.
         _playersRigidBody ??= GetComponent<Rigidbody2D>();
-
         _inputActionReference = new PlayerControlls();
-        //enabling the Input actions
         _inputActionReference.Enable();
-        //reading the values of the player movement direction for the players movement.
         _inputActionReference.Movement.Move.performed += moving =>
         {
-
                 _playersMovementDirection = moving.ReadValue<float>();
- 
         };
-
         _inputActionReference.Movement.Jump.performed += jumping => { JumpThePlayer(); };
         _inputActionReference.Movement.Dash.performed += dashing => { Dash(); };
+        _inputActionReference.Movement.Dash.performed += attacking => { Attack(); };
     }
 
 
@@ -111,6 +127,11 @@ public class PlayerController : MonoBehaviour
         {
             StartCoroutine(PlayerDash());
         }
+    }
+
+    private void Attack()
+    {
+        //implement Attack here
     }
 
     private IEnumerator PlayerDash()

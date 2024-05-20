@@ -2,14 +2,54 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum CollectibleType
+{
+    heart,
+    coin,
+    blade
+}
+
 public class Coin : MonoBehaviour
 {
-    // Start is called before the first frame update
-    private void OnTriggerEnter2D(Collider2D collision)
+
+    [Header("TypeOfCollectible")]
+    [SerializeField]
+    private CollectibleType _collectibleType;
+
+    #region Referances
+    private Player _player;
+    #endregion
+
+    void Start()
+    {
+        _player = FindObjectOfType<Player>();
+    }
+
+    public void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            Destroy(gameObject);
+            if (_collectibleType == CollectibleType.coin)
+            {
+                GameManager.instance.IncreaseCollectedCoins(100);
+                Destroy(gameObject);
+            }
+
+            if (_collectibleType == CollectibleType.heart)
+            {
+                GameManager.instance.IncreaseHealth(1);
+                _player.HealthUp();
+                Destroy(gameObject);
+            }
+
+            if(_collectibleType == CollectibleType.blade)
+            {
+                GameManager.instance.IncreaseHealth(1);
+                _player.HealthUp();
+                Destroy(gameObject);
+            }
         }
     }
+
 }
+
