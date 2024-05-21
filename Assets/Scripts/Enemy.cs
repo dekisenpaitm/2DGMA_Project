@@ -66,6 +66,20 @@ public class Enemy : MonoBehaviour
     private bool _dead;
     public GameObject hitEffect;
 
+    public GameObject _projectilePrefab;
+    [SerializeField]
+    private float _numberOfProjectiles;
+
+    [SerializeField]
+    private float _shootCD;
+    [SerializeField]
+    private float _radius;
+    [SerializeField]
+    private float _projectileSpeed;
+    [SerializeField]
+    private bool _isShooting;
+
+
 
     private ComboHolder _combo;
     private PlayerController _player;
@@ -89,10 +103,14 @@ public class Enemy : MonoBehaviour
         _combo = FindObjectOfType<ComboHolder>();
         _player_ = FindObjectOfType<Player>();
         _enemyTrigger = FindObjectOfType<EnemyTrigger>();
-        _pois = FindObjectOfType<NavPointManager>().points;
+        if (_canFollow)
+        {
+            _pois = FindObjectOfType<NavPointManager>().points;
+            _currentDestination = _pois[randomPoint()];
+        }
         _anim = GetComponent<Animator>();
         _player = FindObjectOfType<PlayerController>(includeInactive: true);
-        _currentDestination = _pois[randomPoint()];
+        
     }
 
     // Update is called once per frame
@@ -100,25 +118,54 @@ public class Enemy : MonoBehaviour
     {
         if (!_dead)
         {
-
-            SetNewDestination();
-            checkPlayerDistance();
             SetHitRing();
 
-            _distance = Vector2.Distance(_player.gameObject.transform.position, transform.position);
-
-            if (_canFollow)
+            if (!_canFollow)
             {
-                if (inTriggerRange())
+                if (inTriggerRange() && !_isShooting)
                 {
-                    FollowPlayer();
+                    StartCoroutine(ShootCD());
                 }
             }
             else
             {
+                _distance = Vector2.Distance(_player.gameObject.transform.position, transform.position);
+                SetNewDestination();
+                checkPlayerDistance();
                 TravelToPoint();
             }
         }
+    }
+
+    private void Shoot()
+    {
+        Vector2 startPoint = gameObject.transform.position;
+
+        float angleStep = 360f / _numberOfProjectiles;
+        float angle = 0f;
+
+        for (int i = 0; i <= _numberOfProjectiles - 1; i++)
+        {
+            float projectileDirXposition = startPoint.x + Mathf.Sin((angle * Mathf.PI) / 180) * _radius;
+            float projectileDirYposition = startPoint.y + Mathf.Cos((angle * Mathf.PI) / 180) * _radius;
+
+            Vector2 projectileVector = new Vector2(projectileDirXposition, projectileDirYposition);
+            Vector2 projectileMoveDirection = (projectileVector - startPoint).normalized * _projectileSpeed;
+
+            var proj = Instantiate(_projectilePrefab, startPoint, Quaternion.identity);
+            proj.GetComponent<Rigidbody2D>().velocity =
+                new Vector2(projectileMoveDirection.x, projectileMoveDirection.y);
+
+            angle += angleStep;
+        }
+    }
+
+    private IEnumerator ShootCD()
+    {
+        _isShooting = true;
+        Shoot();
+        yield return new WaitForSeconds(_shootCD);
+        _isShooting = false;
     }
 
     private void SetHitRing()
@@ -246,13 +293,6 @@ public class Enemy : MonoBehaviour
         {
             collision.GetComponent<Player>().ApplyDamage(AttackPower);
         }
-    }
-
-    private void FollowPlayer()
-    {
-        _isIdling = false;
-        //_anim.Play("Move");
-        FollowTarget(_player.transform);
     }
 
     private void TakeDamage(int dmgValue)
