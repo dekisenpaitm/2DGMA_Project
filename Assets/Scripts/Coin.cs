@@ -44,8 +44,8 @@ public class Coin : MonoBehaviour
 
             if(_collectibleType == CollectibleType.blade)
             {
-                GameManager.instance.IncreaseHealth(1);
-                _player.HealthUp();
+                GameManager.instance.IncreaseBullets(1);
+                _player.BulletUp();
                 Destroy(gameObject);
             }
         }

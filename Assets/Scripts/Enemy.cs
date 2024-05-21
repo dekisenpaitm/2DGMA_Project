@@ -58,13 +58,17 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float distance;
     [SerializeField]
-    private bool _hasBeenTriggered;
+    public bool _hasBeenTriggered;
     [SerializeField]
     private bool _closeRing;
     private bool _hitable;
+    public bool _cantBeTarget;
+    private bool _dead;
 
 
     private PlayerController _player;
+    private Player _player_;
+    private EnemyTrigger _enemyTrigger;
     private Transform[] _pois;
     private Transform _currentDestination;
     private Animator _anim;
@@ -80,6 +84,8 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _player_ = FindObjectOfType<Player>();
+        _enemyTrigger = FindObjectOfType<EnemyTrigger>();
         _pois = FindObjectOfType<NavPointManager>().points;
         _anim = GetComponent<Animator>();
         _player = FindObjectOfType<PlayerController>(includeInactive: true);
@@ -89,23 +95,26 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        SetNewDestination();
-        checkPlayerDistance();
-        SetHitRing();
-
-        _distance = Vector2.Distance(_player.gameObject.transform.position, transform.position);
-
-        if (_canFollow)
+        if (!_dead)
         {
-            if (inTriggerRange())
+
+            SetNewDestination();
+            checkPlayerDistance();
+            SetHitRing();
+
+            _distance = Vector2.Distance(_player.gameObject.transform.position, transform.position);
+
+            if (_canFollow)
             {
-                FollowPlayer();
+                if (inTriggerRange())
+                {
+                    FollowPlayer();
+                }
             }
-        }
-        else
-        {
-            TravelToPoint();
+            else
+            {
+                TravelToPoint();
+            }
         }
     }
 
@@ -119,6 +128,7 @@ public class Enemy : MonoBehaviour
 
         if(hitRing.transform.localScale == new Vector3(0,0,1) && _hasBeenTriggered)
         {
+            _cantBeTarget = true; ;
             hitRing.SetActive(false);
         }
 
@@ -131,6 +141,7 @@ public class Enemy : MonoBehaviour
         if(hitRing.transform.localScale == new Vector3(0.5f, 0.5f, 1))
         {
             _hitable = false;
+            _enemyTrigger.DeleteFromList(this.gameObject);
             hitRing.GetComponent<SpriteRenderer>().material = _far;
         }
 
@@ -141,9 +152,21 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void TryToHit()
+    public void TryToKill()
     {
-        //implement kill function here
+        if (GameManager.instance.Bullets > 0)
+        {
+            GameManager.instance.DecreaseBullets(1);
+            _player_.BulletDown();
+            if (_hitable)
+            {
+                GameManager.instance.IncreaseCollectedCoins(1000);
+                _dead = true;
+                _hitable = false;
+                GetComponent<Rigidbody2D>().gravityScale = 10;
+                GetComponent<Collider2D>().enabled = false;
+            }
+        }
     }
 
     private IEnumerator CloseRing()
@@ -207,6 +230,14 @@ public class Enemy : MonoBehaviour
             
     }
 
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Player") && collision.name == "Player")
+        {
+            collision.GetComponent<Player>().ApplyDamage(AttackPower);
+        }
+    }
+
     private void FollowPlayer()
     {
         _isIdling = false;
@@ -225,8 +256,8 @@ public class Enemy : MonoBehaviour
         _health = _health -= dmgValue;
     }
 
-    private void OnDeath()
+    private void OnDestroy()
     {
-
+        _enemyTrigger.DeleteFromList(this.gameObject);
     }
 }

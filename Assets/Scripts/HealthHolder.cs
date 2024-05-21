@@ -23,7 +23,7 @@ public class HealthHolder : MonoBehaviour
     private int _maxPlayerHealth;
     #endregion
 
-    void Start()
+    void Awake()
     {
         _player = FindObjectOfType<Player>();
         _maxPlayerHealth = _player.GetHealth();
@@ -39,10 +39,6 @@ public class HealthHolder : MonoBehaviour
             {
                 hearts[i].SetActive(true);
             }
-            else if(_currentPlayerHealth == 0) 
-            {
-                hearts[0].SetActive(false);
-            } 
             else
             {
                 hearts[i].SetActive(false);

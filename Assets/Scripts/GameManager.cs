@@ -10,13 +10,19 @@ public class GameManager : MonoBehaviour
 
     #region Attributes
     [SerializeField]
+    private int _maxHealth;
     private int _health;
 
     [SerializeField]
     private int _collectedCoins;
+
+    [SerializeField]
+    private int _maxBullets;
+    private int _bullets;
     #endregion
 
     #region Referances
+    private BulletHolder _bulletHolder;
     private CoinCounter _coinCounter;
     private HealthHolder _healthHolder;
     #endregion
@@ -27,22 +33,58 @@ public class GameManager : MonoBehaviour
         set { _health = value; }
     }
 
+    public int Bullets
+    {
+        get { return _bullets; }
+        set { _bullets = value; }
+    }
+
     public void DecreaseHealth(int decreaseBy)
     {
-        _health -= decreaseBy;
-        UpdateHealthCounter();
+        if (_health >= _maxHealth && _health > 0)
+        {
+            _health -= decreaseBy;
+            UpdateHealthCounter();
+        }
     }
 
     public void IncreaseHealth(int increaseBy)
     {
-        _health += increaseBy;
-        UpdateHealthCounter();
+        if (_health < _maxHealth)
+        {
+            _health += increaseBy;
+            UpdateHealthCounter();
+        }
+    }
+
+    public void DecreaseBullets(int decreaseBy)
+    {
+        if (_bullets >= _maxBullets && _bullets > 0)
+        {
+            _bullets -= decreaseBy;
+            UpdateBulletsCounter();
+        }
+    }
+
+    public void IncreaseBullets(int increaseBy)
+    {
+        if (_bullets < _maxBullets)
+        {
+            _bullets += increaseBy;
+            UpdateBulletsCounter();
+        }
     }
 
     public void UpdateHealthCounter()
     {
         _healthHolder.Health = _health;
         _healthHolder.UpdateHealth();
+    }
+
+    public void UpdateBulletsCounter()
+    {
+        _bulletHolder.Bullets = _bullets;
+        _bulletHolder.UpdateBullets();
     }
 
     public int GetCollectedCoins() => _collectedCoins;
@@ -71,8 +113,18 @@ public class GameManager : MonoBehaviour
         }
         _coinCounter = FindObjectOfType<CoinCounter>();
         _healthHolder = FindObjectOfType<HealthHolder>();
+        _bulletHolder = FindObjectOfType<BulletHolder>();
         instance = this;
+
         DontDestroyOnLoad(gameObject);
+    }
+
+    public void Start()
+    {
+        _maxBullets = _bullets;
+        _maxHealth = _health;
+        UpdateHealthCounter();
+        UpdateBulletsCounter();
     }
 
     // Update is called once per frame

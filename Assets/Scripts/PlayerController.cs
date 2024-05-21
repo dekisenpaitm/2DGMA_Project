@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Referances
+    private EnemyTrigger _enemyTrigger;
     public PlayerStates currentState;
     private SpineAnimationController _spineAnim;
     private PlayerControlls _inputActionReference;
@@ -52,10 +53,9 @@ public class PlayerController : MonoBehaviour
     public SmoothCameraFollow cam;
     #endregion
 
-
-
     private void Start()
     {
+        _enemyTrigger = GetComponentInChildren<EnemyTrigger>();
         cam = FindObjectOfType<SmoothCameraFollow>();
         _anim = GetComponent<Animator>();
         _spineAnim = FindObjectOfType<SpineAnimationController>(includeInactive: true);
@@ -69,9 +69,8 @@ public class PlayerController : MonoBehaviour
         };
         _inputActionReference.Movement.Jump.performed += jumping => { JumpThePlayer(); };
         _inputActionReference.Movement.Dash.performed += dashing => { Dash(); };
-        _inputActionReference.Movement.Dash.performed += attacking => { Attack(); };
+        _inputActionReference.Movement.Attack.performed += attacking => { Attack(); };
     }
-
 
     private void Update()
     {
@@ -97,18 +96,15 @@ public class PlayerController : MonoBehaviour
         }
 
 
-
         Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
         float wiggleRoom = 10;
         
         if (!isMovementStopped && screenPos.x >= wiggleRoom)
         {
-            //Moving player using player rigid body.
             _playersRigidBody.velocity =
                     new Vector2(_playersMovementDirection * playerSpeed, _playersRigidBody.velocity.y);
             if((_playersRigidBody.velocity.y != 0 || _playersRigidBody.velocity.x != 0) && !dashing)
             {
-                Debug.Log(_playersMovementDirection);
                 currentState = PlayerStates.running;
             } else if ((_playersRigidBody.velocity.y == 0 && _playersRigidBody.velocity.x == 0) && currentState != PlayerStates.jumping && !dashing)
             {
@@ -131,7 +127,10 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
-        //implement Attack here
+        if (_enemyTrigger._target != null)
+        {
+            _enemyTrigger._target.GetComponent<Enemy>().TryToKill();
+        }
     }
 
     private IEnumerator PlayerDash()
@@ -170,7 +169,6 @@ public class PlayerController : MonoBehaviour
         
         currentState = PlayerStates.jumping;
         playerJumpCount--;
-        //Moving player using player rigid body.
         _playersRigidBody.velocity = Vector2.up * playerJumpForce;
         jumping = false;
     }
@@ -178,7 +176,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log(collision.gameObject.tag);
         var contact = collision.GetContact(0);
         var contactPoint = contact.point;
         var ownCenter = contact.collider.bounds.center;
@@ -191,7 +188,6 @@ public class PlayerController : MonoBehaviour
                 //Debug.LogError("HIT MY HEAD");
                 isMovementStopped = true;
             }
-            Debug.Log(isMovementStopped);
 
             if (contactPoint.y > ownCenter.y)
             {

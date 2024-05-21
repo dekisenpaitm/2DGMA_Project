@@ -15,11 +15,18 @@ public class Player : MonoBehaviour
     private int currentHealth;
 
     [SerializeField]
+    private int maxBullets;
+
+    [SerializeField]
+    private int currentBullets;
+
+    [SerializeField]
     private int damage;
     #endregion
 
     #region DamageCheck
     private bool _hit;
+    public Collider2D _hitBox;
     #endregion
 
     #region Referances
@@ -28,8 +35,10 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        currentBullets = maxBullets;
         currentHealth = maxHealth;
         GameManager.instance.Health = maxHealth;
+        GameManager.instance.Bullets = maxBullets;
         _rb = GetComponent<Rigidbody>();
     }
 
@@ -46,17 +55,30 @@ public class Player : MonoBehaviour
         return currentHealth;
     }
 
+    public void BulletUp()
+    {
+        if (currentBullets < maxBullets)
+        {
+            currentBullets++;
+        }
+    }
+
+    public void BulletDown()
+    {
+        if (currentBullets > 0)
+        {
+            currentBullets--;
+        }
+    }
+
+    public int GetBullets()
+    {
+        return maxBullets;
+    }
+
     public int GetDamageValue()
     {
         return damage;
-    }
-
-    public void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Enemy"))
-        {
-            ApplyDamage(collision.gameObject.GetComponent<Enemy>().AttackPower);
-        }
     }
 
     public void ApplyDamage(int damage)
@@ -68,7 +90,6 @@ public class Player : MonoBehaviour
     {
         if (!_hit && currentHealth > 0)
         {
-            Debug.Log("I got hit with " + damage);
             currentHealth -= damage;
             StartHit();
             GameManager.instance.DecreaseHealth(damage);
