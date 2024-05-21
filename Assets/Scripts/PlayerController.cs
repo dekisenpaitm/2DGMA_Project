@@ -195,6 +195,7 @@ public class PlayerController : MonoBehaviour
                 {
                     _anim.Play("Player_Land");
                 }
+                jumping = false;
                 playerJumpCount = 2;
                 isMovementStopped = false;
             }

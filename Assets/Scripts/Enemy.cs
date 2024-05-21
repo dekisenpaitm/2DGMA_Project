@@ -64,8 +64,10 @@ public class Enemy : MonoBehaviour
     private bool _hitable;
     public bool _cantBeTarget;
     private bool _dead;
+    public GameObject hitEffect;
 
 
+    private ComboHolder _combo;
     private PlayerController _player;
     private Player _player_;
     private EnemyTrigger _enemyTrigger;
@@ -84,6 +86,7 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _combo = FindObjectOfType<ComboHolder>();
         _player_ = FindObjectOfType<Player>();
         _enemyTrigger = FindObjectOfType<EnemyTrigger>();
         _pois = FindObjectOfType<NavPointManager>().points;
@@ -160,11 +163,18 @@ public class Enemy : MonoBehaviour
             _player_.BulletDown();
             if (_hitable)
             {
+                _combo.RandomizeString(false);
+                GameManager.instance.IncreaseEnemies();
+                GameObject explosion = Instantiate(hitEffect, transform);
+                explosion.transform.position = transform.position;
                 GameManager.instance.IncreaseCollectedCoins(1000);
                 _dead = true;
                 _hitable = false;
                 GetComponent<Rigidbody2D>().gravityScale = 10;
                 GetComponent<Collider2D>().enabled = false;
+            } else
+            {
+                _combo.RandomizeString(true);
             }
         }
     }

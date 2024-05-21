@@ -199,6 +199,7 @@ MonoBehaviour:
   _hasBeenTriggered: 0
   _closeRing: 0
   _cantBeTarget: 0
+  hitEffect: {fileID: 5998310737661866183, guid: fb6a08968c5810441953aa8ddd060218, type: 3}
 --- !u!70 &-3333746197022104007
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

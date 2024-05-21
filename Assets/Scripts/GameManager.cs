@@ -19,6 +19,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private int _maxBullets;
     private int _bullets;
+
+    [SerializeField]
+    private int _enemiesKilled;
     #endregion
 
     #region Referances
@@ -39,9 +42,20 @@ public class GameManager : MonoBehaviour
         set { _bullets = value; }
     }
 
+    public int Enemies
+    {
+        get { return _enemiesKilled; }
+        set { _enemiesKilled = value; }
+    }
+
+    public void IncreaseEnemies()
+    {
+        _enemiesKilled ++;
+    }
+
     public void DecreaseHealth(int decreaseBy)
     {
-        if (_health >= _maxHealth && _health > 0)
+        if (_health > 0)
         {
             _health -= decreaseBy;
             UpdateHealthCounter();
@@ -59,7 +73,7 @@ public class GameManager : MonoBehaviour
 
     public void DecreaseBullets(int decreaseBy)
     {
-        if (_bullets >= _maxBullets && _bullets > 0)
+        if (_bullets > 0)
         {
             _bullets -= decreaseBy;
             UpdateBulletsCounter();
