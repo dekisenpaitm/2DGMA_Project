@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     private BulletHolder _bulletHolder;
     private CoinCounter _coinCounter;
     private HealthHolder _healthHolder;
+    private GameEndMenu _end;
     #endregion
 
     public int Health
@@ -125,6 +126,7 @@ public class GameManager : MonoBehaviour
         {
             return;
         }
+        _end = FindObjectOfType<GameEndMenu>(includeInactive: true);
         _coinCounter = FindObjectOfType<CoinCounter>();
         _healthHolder = FindObjectOfType<HealthHolder>();
         _bulletHolder = FindObjectOfType<BulletHolder>();
@@ -144,6 +146,12 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if(_health <= 0)
+        {
+            _end.finalPoints = _collectedCoins;
+            _end.finalEnemies = _enemiesKilled;
+            _end.gameObject.SetActive(true);
+            Time.timeScale = 0;
+        }
     }
 }

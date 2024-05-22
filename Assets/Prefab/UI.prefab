@@ -1696,6 +1696,7 @@ GameObject:
   - component: {fileID: 2456462514810784395}
   - component: {fileID: 8232428838029297537}
   - component: {fileID: 3115347669707177869}
+  - component: {fileID: 440204215283772592}
   m_Layer: 5
   m_Name: GameEndMenu
   m_TagString: Untagged
@@ -1790,6 +1791,22 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &440204215283772592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6419405655448085374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64ae9e2eddb8bb4bbf70032e0319859, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  points: {fileID: 5891005178866040121}
+  enemies: {fileID: 678297348190844472}
+  finalPoints: 0
+  finalEnemies: 0
 --- !u!1 &6527192523188685602
 GameObject:
   m_ObjectHideFlags: 0

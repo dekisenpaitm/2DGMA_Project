@@ -31,6 +31,7 @@ public class Player : MonoBehaviour
 
     #region Referances
     private Rigidbody _rb;
+    private Animator _anim;
     #endregion
 
     private void Start()
@@ -40,6 +41,7 @@ public class Player : MonoBehaviour
         GameManager.instance.Health = maxHealth;
         GameManager.instance.Bullets = maxBullets;
         _rb = GetComponent<Rigidbody>();
+        _anim = GetComponent<Animator>();
     }
 
     public void HealthUp()
@@ -108,6 +110,7 @@ public class Player : MonoBehaviour
     public IEnumerator GotDamage()
     {
         _hit = true;
+        _anim.Play("Player_Hit");
         yield return new WaitForSeconds(0.3f);
         _hit = false;
     }
