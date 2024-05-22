@@ -101,7 +101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _name: 
-  _maxHealth: 0
+  _maxHealth: 3
   _speed: 0
   _attackPower: 1
   _isMelee: 0
@@ -116,12 +116,13 @@ MonoBehaviour:
   _closeRing: 0
   _cantBeTarget: 0
   hitEffect: {fileID: 5998310737661866183, guid: fb6a08968c5810441953aa8ddd060218, type: 3}
-  _projectilePrefab: {fileID: 5998310737661866183, guid: fb6a08968c5810441953aa8ddd060218, type: 3}
+  _projectilePrefab: {fileID: 6617017662938625251, guid: ddeca9343f9ed8b4194c6dafb446dec3, type: 3}
   _numberOfProjectiles: 6
   _shootCD: 2
   _radius: 360
-  _projectileSpeed: 100
+  _projectileSpeed: 10
   _isShooting: 0
+  _shootingRange: 20
 --- !u!70 &5202378203400110776
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

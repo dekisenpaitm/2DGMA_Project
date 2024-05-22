@@ -78,6 +78,8 @@ public class Enemy : MonoBehaviour
     private float _projectileSpeed;
     [SerializeField]
     private bool _isShooting;
+    [SerializeField]
+    private float _shootingRange;
 
 
 
@@ -118,23 +120,33 @@ public class Enemy : MonoBehaviour
     {
         if (!_dead)
         {
+            _distance = Vector2.Distance(_player.gameObject.transform.position, transform.position);
+            checkPlayerDistance();
             SetHitRing();
 
             if (!_canFollow)
             {
-                if (inTriggerRange() && !_isShooting)
+                if (inShootingRange() && !_isShooting)
                 {
                     StartCoroutine(ShootCD());
                 }
             }
             else
             {
-                _distance = Vector2.Distance(_player.gameObject.transform.position, transform.position);
                 SetNewDestination();
-                checkPlayerDistance();
                 TravelToPoint();
             }
         }
+    }
+
+    private bool inShootingRange()
+    {
+        if (_distance <= _shootingRange)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private void Shoot()
@@ -219,10 +231,10 @@ public class Enemy : MonoBehaviour
                 _hitable = false;
                 GetComponent<Rigidbody2D>().gravityScale = 10;
                 GetComponent<Collider2D>().enabled = false;
-            } else
-            {
-                _combo.RandomizeString(true);
-            }
+                return;
+            } 
+            
+            _combo.RandomizeString(true);
         }
     }
 
