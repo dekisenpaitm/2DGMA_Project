@@ -89,8 +89,19 @@
                 },
                 {
                     "name": "",
+                    "id": "73412a44-8ea1-4e9a-b9df-677815da06ae",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "fa6f39b9-ee86-4e16-aac7-8baf931c4d8b",
-                    "path": "<Mouse>/rightButton",
+                    "path": "<Keyboard>/shift",
                     "interactions": "Press",
                     "processors": "",
                     "groups": "",
@@ -100,9 +111,31 @@
                 },
                 {
                     "name": "",
+                    "id": "ef086fff-2208-459a-93dc-99019c527802",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "537828a0-65b2-453f-aa5c-b0b5a311d0ea",
-                    "path": "<Mouse>/leftButton",
+                    "path": "<Keyboard>/enter",
                     "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b2f90c6c-25f6-473f-a4a0-2de5f566aaf3",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Attack",

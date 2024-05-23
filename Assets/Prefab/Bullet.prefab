@@ -505,6 +505,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _collectibleType: 2
+  _audio: {fileID: 7181333067517043186, guid: 86f9927f5b26b4244a42a035552a5964, type: 3}
 --- !u!58 &5701017639496694404
 CircleCollider2D:
   m_ObjectHideFlags: 0

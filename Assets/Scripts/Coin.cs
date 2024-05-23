@@ -15,13 +15,16 @@ public class Coin : MonoBehaviour
     [Header("TypeOfCollectible")]
     [SerializeField]
     private CollectibleType _collectibleType;
+    public GameObject _audio;
 
     #region Referances
+    private GameManager _gamMan;
     private Player _player;
     #endregion
 
     void Start()
     {
+        _gamMan = FindObjectOfType<GameManager>();
         _player = FindObjectOfType<Player>();
     }
 
@@ -29,27 +32,32 @@ public class Coin : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            if (_audio != null)
+            {
+                GameObject audio = Instantiate(_audio);
+            }
+
             if (_collectibleType == CollectibleType.coin)
             {
-                GameManager.instance.IncreaseCollectedCoins(100);
+                _gamMan.IncreaseCollectedCoins(100);
                 Destroy(gameObject);
+
             }
 
             if (_collectibleType == CollectibleType.heart)
             {
-                GameManager.instance.IncreaseHealth(1);
+                _gamMan.IncreaseHealth(1);
                 _player.HealthUp();
                 Destroy(gameObject);
             }
 
             if(_collectibleType == CollectibleType.blade)
             {
-                GameManager.instance.IncreaseBullets(1);
+                _gamMan.IncreaseBullets(1);
                 _player.BulletUp();
                 Destroy(gameObject);
             }
         }
     }
-
 }
 

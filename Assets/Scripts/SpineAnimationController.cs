@@ -4,14 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// This class shows off the two most basic Spine commands 'SetAnimation()' and 'AddAnimation()'
-/// as well as showing the usage of coroutines
-/// </summary>
+public class SpineAnimationController : MonoBehaviour { 
 
-public class SpineAnimationController : MonoBehaviour
-{
-    // [SpineAnimation] creates a dropdown in the inspector that let's us choose from all the animations on a specific 'SkeletonAnimation' instance
     [SpineAnimation]
     public string dashAnimation;
 
@@ -29,16 +23,11 @@ public class SpineAnimationController : MonoBehaviour
     private FlipEffectController _flipEffect;
     private PlayerStates current;
 
-
-
-    // Spine component that lets us manipulate the animations and skeleton of our spine character
     SkeletonAnimation skeletonAnimation;
 
-    // 'AnimationState' keeps track of which animation the character is currently in/playing
     Spine.AnimationState animationState;
     Skeleton skeleton;
 
-    // Start is called before the first frame update
     void Start()
     {
         _flipEffect = FindObjectOfType<FlipEffectController>(includeInactive: true);
@@ -48,14 +37,6 @@ public class SpineAnimationController : MonoBehaviour
         skeleton = skeletonAnimation.skeleton;
         FlipSprite();
     }
-
-    /// <summary>
-    /// A coroutine allows you to spread tasks across several frames.
-    /// In Unity, a coroutine is a method that can pause execution and return control to Unity but then continue where it left off on the following frame.
-    /// 
-    /// For more info see: https://docs.unity3d.com/Manual/Coroutines.html
-    /// </summary>
-
 
     public void Update()
     {

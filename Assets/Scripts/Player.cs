@@ -27,19 +27,25 @@ public class Player : MonoBehaviour
     #region DamageCheck
     private bool _hit;
     public Collider2D _hitBox;
+    private AudioSource _hitSound;
     #endregion
 
     #region Referances
+    private GameManager _gameMan;
     private Rigidbody _rb;
     private Animator _anim;
     #endregion
 
-    private void Start()
+    private void OnEnable()
     {
+        _gameMan = FindObjectOfType<GameManager>();
+        _hitSound = GetComponent<AudioSource>();
         currentBullets = maxBullets;
         currentHealth = maxHealth;
-        GameManager.instance.Health = maxHealth;
-        GameManager.instance.Bullets = maxBullets;
+        _gameMan.Health = maxHealth;
+        _gameMan.Bullets = maxBullets;
+        _gameMan.MaxHealth = maxHealth;
+        _gameMan.MaxBullets = maxBullets;
         _rb = GetComponent<Rigidbody>();
         _anim = GetComponent<Animator>();
     }
@@ -94,7 +100,7 @@ public class Player : MonoBehaviour
         {
             currentHealth -= damage;
             StartHit();
-            GameManager.instance.DecreaseHealth(damage);
+            _gameMan.DecreaseHealth(damage);
             if (currentHealth <= 0)
             {
                 //Destroy(this);
@@ -109,6 +115,7 @@ public class Player : MonoBehaviour
 
     public IEnumerator GotDamage()
     {
+        _hitSound.Play();
         _hit = true;
         _anim.Play("Player_Hit");
         yield return new WaitForSeconds(0.3f);

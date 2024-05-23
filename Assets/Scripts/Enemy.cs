@@ -82,7 +82,9 @@ public class Enemy : MonoBehaviour
     private float _shootingRange;
 
 
-
+    public AudioSource _shootSound;
+    public AudioSource _miss;
+    private GameManager _gameMan;
     private ComboHolder _combo;
     private PlayerController _player;
     private Player _player_;
@@ -102,6 +104,7 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _gameMan = FindObjectOfType<GameManager>();
         _combo = FindObjectOfType<ComboHolder>();
         _player_ = FindObjectOfType<Player>();
         _enemyTrigger = FindObjectOfType<EnemyTrigger>();
@@ -175,6 +178,7 @@ public class Enemy : MonoBehaviour
     private IEnumerator ShootCD()
     {
         _isShooting = true;
+        _shootSound.Play();
         Shoot();
         yield return new WaitForSeconds(_shootCD);
         _isShooting = false;
@@ -216,24 +220,25 @@ public class Enemy : MonoBehaviour
 
     public void TryToKill()
     {
-        if (GameManager.instance.Bullets > 0)
+        if (_gameMan.Bullets > 0)
         {
-            GameManager.instance.DecreaseBullets(1);
+            _gameMan.DecreaseBullets(1);
             _player_.BulletDown();
             if (_hitable)
             {
                 _combo.RandomizeString(false);
-                GameManager.instance.IncreaseEnemies();
+                _gameMan.IncreaseEnemies();
                 GameObject explosion = Instantiate(hitEffect, transform);
                 explosion.transform.position = transform.position;
-                GameManager.instance.IncreaseCollectedCoins(1000);
+                _gameMan.IncreaseCollectedCoins(1000);
                 _dead = true;
                 _hitable = false;
                 GetComponent<Rigidbody2D>().gravityScale = 10;
                 GetComponent<Collider2D>().enabled = false;
                 return;
-            } 
-            
+            }
+
+            _miss.Play();
             _combo.RandomizeString(true);
         }
     }
@@ -243,8 +248,8 @@ public class Enemy : MonoBehaviour
         _closeRing = true;
         while(hitRing.transform.localScale != new Vector3(0, 0, 1))
         {
-            hitRing.transform.localScale += new Vector3(-0.01f,-0.01f, 0);
-            yield return new WaitForSeconds(0.003f);
+            hitRing.transform.localScale += new Vector3(-0.05f,-0.05f, 0);
+            yield return new WaitForSeconds(0.0001f);
         }
     }
 

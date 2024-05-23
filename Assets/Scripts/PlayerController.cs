@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float playerSpeed;
     private float _playersMovementDirection = 0;
-    private bool isMovementStopped = false;
+    public bool isMovementStopped = false;
     #endregion
 
     #region Jump
@@ -51,10 +51,12 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem dust;
     public ParticleSystem dashTrail;
     public SmoothCameraFollow cam;
+    private GameManager _gameMan;
     #endregion
 
     private void Start()
     {
+        _gameMan = FindObjectOfType<GameManager>();
         _enemyTrigger = GetComponentInChildren<EnemyTrigger>();
         cam = FindObjectOfType<SmoothCameraFollow>();
         _anim = GetComponent<Animator>();
@@ -72,54 +74,59 @@ public class PlayerController : MonoBehaviour
         _inputActionReference.Movement.Attack.performed += attacking => { Attack(); };
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-
-        if (!_isFlipped && _playersMovementDirection < 0)
+        if (!_gameMan._gameEnded)
         {
-            _spineAnim.FlipSprite();
-            _isFlipped = true;
-            if (playerJumpCount >= 2)
+
+            if (!_isFlipped && _playersMovementDirection < 0)
             {
-                dust.Play();
+                _spineAnim.FlipSprite();
+                _isFlipped = true;
+                if (playerJumpCount >= 2)
+                {
+                    dust.Play();
+                }
             }
-        }
 
-        if(_playersMovementDirection > 0 && _isFlipped)
-        {
-            _isFlipped = false;
-            _spineAnim.FlipSprite();
-            if (playerJumpCount >= 2)
+            if (_playersMovementDirection > 0 && _isFlipped)
             {
-                dust.Play();
+                _isFlipped = false;
+                _spineAnim.FlipSprite();
+                if (playerJumpCount >= 2)
+                {
+                    dust.Play();
+                }
             }
-        }
 
 
-        Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
-        float wiggleRoom = 10;
-        
-        if (!isMovementStopped && screenPos.x >= wiggleRoom)
-        {
-            _playersRigidBody.velocity =
-                    new Vector2(_playersMovementDirection * playerSpeed, _playersRigidBody.velocity.y);
-            if((_playersRigidBody.velocity.y != 0 || _playersRigidBody.velocity.x != 0) && !dashing)
+            Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
+            float wiggleRoom = 10;
+
+            if (!isMovementStopped && screenPos.x >= wiggleRoom)
             {
-                currentState = PlayerStates.running;
-            } else if ((_playersRigidBody.velocity.y == 0 && _playersRigidBody.velocity.x == 0) && currentState != PlayerStates.jumping && !dashing)
-            {
-                currentState = PlayerStates.idle;
+                _playersRigidBody.velocity =
+                        new Vector2(_playersMovementDirection * playerSpeed, _playersRigidBody.velocity.y);
+                if ((_playersRigidBody.velocity.y != 0 || _playersRigidBody.velocity.x != 0) && !dashing)
+                {
+                    currentState = PlayerStates.running;
+                }
+                else if ((_playersRigidBody.velocity.y == 0 && _playersRigidBody.velocity.x == 0) && currentState != PlayerStates.jumping && !dashing)
+                {
+                    currentState = PlayerStates.idle;
+                }
             }
-        } else
-        {
-            _playersRigidBody.velocity = Vector2.zero;
-            transform.position = new Vector2(transform.position.x + 0.1f, transform.position.y);
+            else
+            {
+                _playersRigidBody.velocity = Vector2.zero;
+                transform.position = new Vector2(transform.position.x + 0.1f, transform.position.y);
+            }
         }
     }
 
     private void Dash()
     {
-        if (!jumping)
+        if (!jumping && !_gameMan._gameEnded)
         {
             StartCoroutine(PlayerDash());
         }
@@ -127,7 +134,7 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
-        if (_enemyTrigger._target != null)
+        if (_enemyTrigger._target != null && !_gameMan._gameEnded)
         {
             _enemyTrigger._target.GetComponent<Enemy>().TryToKill();
         }
@@ -141,19 +148,19 @@ public class PlayerController : MonoBehaviour
             dust.Play();
         }
         dashing = true;
-        playerSpeed = 10;
+        playerSpeed = 13;
         currentState = PlayerStates.dashing;
-        _playersRigidBody.gravityScale = 1;
+        _playersRigidBody.gravityScale = 0.1f;
         yield return new WaitForSeconds(0.5f);
         currentState = PlayerStates.idle;
         _playersRigidBody.gravityScale = 3;
-        playerSpeed = 5;
+        playerSpeed = 8;
         dashing = false;
     }
 
     private void JumpThePlayer()
     {
-        if (playerJumpCount > 0 && !dashing)
+        if (playerJumpCount > 0 && !dashing && !_gameMan._gameEnded)
         {
             if(playerJumpCount >= 2)
             {
@@ -166,7 +173,6 @@ public class PlayerController : MonoBehaviour
 
     public void Jump()
     {
-        
         currentState = PlayerStates.jumping;
         playerJumpCount--;
         _playersRigidBody.velocity = Vector2.up * playerJumpForce;

@@ -6,8 +6,6 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance;
-
     #region Attributes
     [SerializeField]
     private int _maxHealth;
@@ -22,9 +20,13 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private int _enemiesKilled;
+
+    [SerializeField]
+    public bool _gameEnded;
     #endregion
 
     #region Referances
+    private Player _player;
     private BulletHolder _bulletHolder;
     private CoinCounter _coinCounter;
     private HealthHolder _healthHolder;
@@ -37,10 +39,22 @@ public class GameManager : MonoBehaviour
         set { _health = value; }
     }
 
+    public int MaxHealth
+    {
+        get { return _maxHealth; }
+        set { _maxHealth = value; }
+    }
+
     public int Bullets
     {
         get { return _bullets; }
         set { _bullets = value; }
+    }
+
+    public int MaxBullets
+    {
+        get { return _maxBullets; }
+        set { _maxBullets = value; }
     }
 
     public int Enemies
@@ -122,36 +136,23 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        if (instance != null)
-        {
-            return;
-        }
+        Application.targetFrameRate = 60;
         _end = FindObjectOfType<GameEndMenu>(includeInactive: true);
+        _player = FindObjectOfType<Player>();
         _coinCounter = FindObjectOfType<CoinCounter>();
         _healthHolder = FindObjectOfType<HealthHolder>();
         _bulletHolder = FindObjectOfType<BulletHolder>();
-        instance = this;
-
-        DontDestroyOnLoad(gameObject);
-    }
-
-    public void Start()
-    {
-        _maxBullets = _bullets;
-        _maxHealth = _health;
-        UpdateHealthCounter();
-        UpdateBulletsCounter();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(_health <= 0)
+        if (_health <= 0)
         {
+            _gameEnded = true;
             _end.finalPoints = _collectedCoins;
             _end.finalEnemies = _enemiesKilled;
             _end.gameObject.SetActive(true);
-            Time.timeScale = 0;
         }
     }
 }

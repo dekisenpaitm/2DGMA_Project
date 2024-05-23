@@ -23,12 +23,17 @@ public class HealthHolder : MonoBehaviour
     private int _maxPlayerHealth;
     #endregion
 
-    void Awake()
+    void Start()
     {
         _player = FindObjectOfType<Player>();
         _maxPlayerHealth = _player.GetHealth();
         _currentPlayerHealth = _maxPlayerHealth;
         UpdateHealth();
+    }
+
+    private void Update()
+    {
+        _currentPlayerHealth = _player.GetHealth();
     }
 
     public void UpdateHealth()
