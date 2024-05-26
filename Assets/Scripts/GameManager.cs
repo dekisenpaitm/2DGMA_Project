@@ -136,7 +136,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        Application.targetFrameRate = 60;
+        Application.targetFrameRate = 61;
         _end = FindObjectOfType<GameEndMenu>(includeInactive: true);
         _player = FindObjectOfType<Player>();
         _coinCounter = FindObjectOfType<CoinCounter>();

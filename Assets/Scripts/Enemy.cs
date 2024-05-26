@@ -119,7 +119,7 @@ public class Enemy : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (!_dead)
         {
@@ -198,13 +198,13 @@ public class Enemy : MonoBehaviour
             hitRing.SetActive(false);
         }
 
-        if(hitRing.transform.localScale == new Vector3(0.8f, 0.8f, 1))
+        if(hitRing.transform.localScale.y <= 0.9 && hitRing.transform.localScale.x <= 0.9 && hitRing.transform.localScale.y > 0.5 && hitRing.transform.localScale.x > 0.5)
         {
             _hitable = true;
             hitRing.GetComponent<SpriteRenderer>().material = _close;
         }
 
-        if(hitRing.transform.localScale == new Vector3(0.5f, 0.5f, 1))
+        if(hitRing.transform.localScale.y <= 0.5 && hitRing.transform.localScale.x <= 0.5)
         {
             _hitable = false;
             _enemyTrigger.DeleteFromList(this.gameObject);

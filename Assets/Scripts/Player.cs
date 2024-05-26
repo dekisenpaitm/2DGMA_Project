@@ -32,7 +32,7 @@ public class Player : MonoBehaviour
 
     #region Referances
     private GameManager _gameMan;
-    private Rigidbody _rb;
+    private Rigidbody2D _rb;
     private Animator _anim;
     #endregion
 
@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
         _gameMan.Bullets = maxBullets;
         _gameMan.MaxHealth = maxHealth;
         _gameMan.MaxBullets = maxBullets;
-        _rb = GetComponent<Rigidbody>();
+        _rb = GetComponent<Rigidbody2D>();
         _anim = GetComponent<Animator>();
     }
 
@@ -103,7 +103,7 @@ public class Player : MonoBehaviour
             _gameMan.DecreaseHealth(damage);
             if (currentHealth <= 0)
             {
-                //Destroy(this);
+                _rb.velocity = Vector2.zero;
             }
         }
     }

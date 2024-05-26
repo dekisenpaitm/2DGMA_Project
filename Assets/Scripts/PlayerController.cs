@@ -126,7 +126,7 @@ public class PlayerController : MonoBehaviour
 
     private void Dash()
     {
-        if (!jumping && !_gameMan._gameEnded)
+        if (!dashing && !_gameMan._gameEnded)
         {
             StartCoroutine(PlayerDash());
         }
@@ -151,7 +151,7 @@ public class PlayerController : MonoBehaviour
         playerSpeed = 13;
         currentState = PlayerStates.dashing;
         _playersRigidBody.gravityScale = 0.1f;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
         currentState = PlayerStates.idle;
         _playersRigidBody.gravityScale = 3;
         playerSpeed = 8;
@@ -160,7 +160,7 @@ public class PlayerController : MonoBehaviour
 
     private void JumpThePlayer()
     {
-        if (playerJumpCount > 0 && !dashing && !_gameMan._gameEnded)
+        if (playerJumpCount > 0 && !_gameMan._gameEnded)
         {
             if(playerJumpCount >= 2)
             {

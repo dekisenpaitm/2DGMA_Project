@@ -107,7 +107,7 @@ MonoBehaviour:
   _speed: 0
   _attackPower: 1
   _isMelee: 0
-  _triggerRange: 10
+  _triggerRange: 9
   _idleTime: 0
   _canFollow: 0
   _far: {fileID: 2100000, guid: ec95a69ec2ea4204db13ccb8da063122, type: 2}
