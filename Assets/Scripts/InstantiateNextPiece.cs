@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class InstantiateNextPiece : MonoBehaviour
 {
+    [Header("Map_Pieces")]
     public GameObject[] objToInstantiate;
+    [Header("Point_To_Instantiate")]
     public GameObject pointToInstantiate;
+    [Header("Layer_To_Be_Instatiated_In")]
     public string layer;
     public Transform layerToSpawn;
+    [Header("Instantiated?")]
     public bool hasInstantiated;
 
     // Update is called once per frame

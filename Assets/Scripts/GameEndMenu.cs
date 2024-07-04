@@ -6,26 +6,16 @@ using UnityEngine.UI;
 
 public class GameEndMenu : MonoBehaviour
 {
+    [Header("UI_Elements")]
     public TextMeshProUGUI points;
     public TextMeshProUGUI enemies;
+    [Header("Points")]
     public int finalPoints;
     public int finalEnemies;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     private void OnEnable()
     {
         points.text = finalPoints.ToString();
         enemies.text = finalEnemies.ToString();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

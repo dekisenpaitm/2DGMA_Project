@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    [Header("Attack_Power")]
     [SerializeField]
     private int attackPower;
 

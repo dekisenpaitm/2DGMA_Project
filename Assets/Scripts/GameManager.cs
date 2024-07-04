@@ -133,10 +133,10 @@ public class GameManager : MonoBehaviour
     {
         _coinCounter.Coins = _collectedCoins;
     }
-    // Start is called before the first frame update
     void Awake()
     {
         Application.targetFrameRate = 61;
+        //frick fricking webGL
         _end = FindObjectOfType<GameEndMenu>(includeInactive: true);
         _player = FindObjectOfType<Player>();
         _coinCounter = FindObjectOfType<CoinCounter>();

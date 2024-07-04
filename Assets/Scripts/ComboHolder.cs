@@ -8,6 +8,7 @@ public class ComboHolder : MonoBehaviour
 
     private string[] _niceThings = { "sweet!", "yeah buddy!", "O M G!", "sheesh!", "wow!", "craaazy!", "On Fire!", "woop!", "critical!", "blblbl", "S-s-sick!", "delicious!", "gg ez"  };
     private string[] _badThings = { "Rip.", "ehhh...", "aw cmon.", "meh.", "try harder.", "nope.", "no.", "close.", "skill issue.", "brother ew.", "cringe..", "next.", "uninstall", "kthxbye", "noob." };
+    [Header("Text_Field")]
     public TextMeshProUGUI text;
     private Animator _anim;
 

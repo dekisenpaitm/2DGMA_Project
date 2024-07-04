@@ -78,48 +78,55 @@ public class PlayerController : MonoBehaviour
     {
         if (!_gameMan._gameEnded)
         {
+            FlipSprite();
+            PlayerMovement(); 
+        }
+    }
 
-            if (!_isFlipped && _playersMovementDirection < 0)
+    private void PlayerMovement()
+    {
+        Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
+        float wiggleRoom = 10;
+
+        if (!isMovementStopped && screenPos.x >= wiggleRoom)
+        {
+            _playersRigidBody.velocity =
+                    new Vector2(_playersMovementDirection * playerSpeed, _playersRigidBody.velocity.y);
+            if ((_playersRigidBody.velocity.y != 0 || _playersRigidBody.velocity.x != 0) && !dashing)
             {
-                _spineAnim.FlipSprite();
-                _isFlipped = true;
-                if (playerJumpCount >= 2)
-                {
-                    dust.Play();
-                }
+                currentState = PlayerStates.running;
             }
-
-            if (_playersMovementDirection > 0 && _isFlipped)
+            else if ((_playersRigidBody.velocity.y == 0 && _playersRigidBody.velocity.x == 0) && currentState != PlayerStates.jumping && !dashing)
             {
-                _isFlipped = false;
-                _spineAnim.FlipSprite();
-                if (playerJumpCount >= 2)
-                {
-                    dust.Play();
-                }
+                currentState = PlayerStates.idle;
             }
+        }
+        else
+        {
+            _playersRigidBody.velocity = Vector2.zero;
+            transform.position = new Vector2(transform.position.x + 0.1f, transform.position.y);
+        }
+    }
 
-
-            Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
-            float wiggleRoom = 10;
-
-            if (!isMovementStopped && screenPos.x >= wiggleRoom)
+    private void FlipSprite()
+    {
+        if (!_isFlipped && _playersMovementDirection < 0)
+        {
+            _spineAnim.FlipSprite();
+            _isFlipped = true;
+            if (playerJumpCount >= 2)
             {
-                _playersRigidBody.velocity =
-                        new Vector2(_playersMovementDirection * playerSpeed, _playersRigidBody.velocity.y);
-                if ((_playersRigidBody.velocity.y != 0 || _playersRigidBody.velocity.x != 0) && !dashing)
-                {
-                    currentState = PlayerStates.running;
-                }
-                else if ((_playersRigidBody.velocity.y == 0 && _playersRigidBody.velocity.x == 0) && currentState != PlayerStates.jumping && !dashing)
-                {
-                    currentState = PlayerStates.idle;
-                }
+                dust.Play();
             }
-            else
+        }
+
+        if (_playersMovementDirection > 0 && _isFlipped)
+        {
+            _isFlipped = false;
+            _spineAnim.FlipSprite();
+            if (playerJumpCount >= 2)
             {
-                _playersRigidBody.velocity = Vector2.zero;
-                transform.position = new Vector2(transform.position.x + 0.1f, transform.position.y);
+                dust.Play();
             }
         }
     }

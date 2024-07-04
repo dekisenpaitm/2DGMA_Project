@@ -4,14 +4,11 @@ using UnityEngine;
 
 public class EnemyTrigger : MonoBehaviour
 {
+    [Header("Enemies_in_sight")]
     public List<GameObject> _enemy;
+    [Header("Closest_Enemy")]
     public GameObject _target;
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
     void Update()
     {
         CheckIfTarget();

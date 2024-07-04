@@ -4,20 +4,23 @@ using UnityEngine;
 
 public class Player_Blade : MonoBehaviour
 {
+    [Header("Object_To_Follow")]
     public PlayerController _player;
+
+    [Header("Offset")]
     public float offset_x;
     public float offset_y;
+
+    [Header("Smooth_Speed")]
     public float smoothSpeed;
+
     private Vector3 velocity = Vector3.zero;
 
-
-    // Start is called before the first frame update
     void Start()
     {
         _player = FindObjectOfType<PlayerController>();
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         FollowTarget();

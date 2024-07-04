@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    #region Enemy_Attributes
     [Header("EnemyHealth")]
     [SerializeField]
     private string _name;
@@ -12,30 +13,14 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private int _maxHealth;
     private int _health;
-    public int Health
-    {
-        get { return _health; }
-        set { _health = value; }
-    }
 
     [Header("Speed")]
     [SerializeField]
     private int _speed;
-    public int Speed
-    {
-        get { return _speed; }
-        set { _speed = value; }
-    }
 
     [Header("AttackPower")]
     [SerializeField]
     private int _attackPower;
-
-    public int AttackPower
-    {
-        get { return _attackPower; }
-        set { _attackPower = value; }
-    }
 
     [Header("Melee/Ranged")]
     [SerializeField]
@@ -49,6 +34,11 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private bool _canFollow;
 
+    private float _distance;
+    private bool _isIdling;
+    #endregion
+
+    #region Damage/Hit
     [Header("HitSetup")]
     [SerializeField]
     public Material _far;
@@ -65,7 +55,9 @@ public class Enemy : MonoBehaviour
     public bool _cantBeTarget;
     private bool _dead;
     public GameObject hitEffect;
+    #endregion
 
+    #region Ranged_Enemy
     public GameObject _projectilePrefab;
     [SerializeField]
     private float _numberOfProjectiles;
@@ -80,8 +72,9 @@ public class Enemy : MonoBehaviour
     private bool _isShooting;
     [SerializeField]
     private float _shootingRange;
+    #endregion
 
-
+    #region Refs
     public AudioSource _shootSound;
     public AudioSource _miss;
     private GameManager _gameMan;
@@ -92,16 +85,31 @@ public class Enemy : MonoBehaviour
     private Transform[] _pois;
     private Transform _currentDestination;
     private Animator _anim;
-    private float _distance;
-    private bool _isIdling;
+    #endregion
 
+    #region Get/Set
+    public int Health
+    {
+        get { return _health; }
+        set { _health = value; }
+    }
+    public int Speed
+    {
+        get { return _speed; }
+        set { _speed = value; }
+    }
     public bool isMelee
     {
         get { return _isMelee; }
         set { _isMelee = value; }
     }
+    public int AttackPower
+    {
+        get { return _attackPower; }
+        set { _attackPower = value; }
+    }
+    #endregion
 
-    // Start is called before the first frame update
     void Start()
     {
         _gameMan = FindObjectOfType<GameManager>();
@@ -118,7 +126,6 @@ public class Enemy : MonoBehaviour
         
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         if (!_dead)
@@ -194,7 +201,7 @@ public class Enemy : MonoBehaviour
 
         if(hitRing.transform.localScale == new Vector3(0,0,1) && _hasBeenTriggered)
         {
-            _cantBeTarget = true; ;
+            _cantBeTarget = true;
             hitRing.SetActive(false);
         }
 
@@ -213,7 +220,6 @@ public class Enemy : MonoBehaviour
 
         if (_hasBeenTriggered && !_closeRing)
         {
-            //hitRing.transform.localScale = new Vector3(distance / 10, distance / 10, 1);
             StartCoroutine(CloseRing());
         }
     }
@@ -271,7 +277,6 @@ public class Enemy : MonoBehaviour
     private IEnumerator reachedLocation()
     {
         _isIdling = true;
-        //_anim.Play("Idle");
         yield return new WaitForSeconds(_idleTime);
         _currentDestination = _pois[randomPoint()];
         _isIdling = false;
@@ -316,7 +321,6 @@ public class Enemy : MonoBehaviour
     {
         if(_health - dmgValue <= 0)
         {
-            //implement deathRoutine
             return;
         }
 

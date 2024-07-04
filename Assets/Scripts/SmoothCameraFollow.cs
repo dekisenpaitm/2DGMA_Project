@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class SmoothCameraFollow : MonoBehaviour
 {
+    [Header("Object_To_Follow")]
     public Transform target;
+
+    [Header("Cam_Attributes")]
     public float smoothSpeed = 0.125f;
     public Vector3 offset;
-    private Vector3 velocity = Vector3.zero;
     public float minY;
     public float maxY;
     public bool cameraHitBoundary;
+
+    private Vector3 velocity = Vector3.zero;
 
     void Start()
     {

@@ -4,8 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpineAnimationController : MonoBehaviour { 
+public class SpineAnimationController : MonoBehaviour {
 
+    #region Spine_Animations
     [SpineAnimation]
     public string dashAnimation;
 
@@ -14,19 +15,18 @@ public class SpineAnimationController : MonoBehaviour {
 
     [SpineAnimation]
     public string idleAnimation;
+    #endregion
 
+    #region Refs
     public Animator _playerAnim;
-
     private TrackEntry _spineAnim;
-
     private PlayerController _player;
     private FlipEffectController _flipEffect;
     private PlayerStates current;
-
-    SkeletonAnimation skeletonAnimation;
-
-    Spine.AnimationState animationState;
-    Skeleton skeleton;
+    private SkeletonAnimation skeletonAnimation;
+    private Spine.AnimationState animationState;
+    private Skeleton skeleton;
+    #endregion
 
     void Start()
     {

@@ -15,6 +15,7 @@ public class Coin : MonoBehaviour
     [Header("TypeOfCollectible")]
     [SerializeField]
     private CollectibleType _collectibleType;
+    [Header("Audio_Effect")]
     public GameObject _audio;
 
     #region Referances

@@ -7,13 +7,6 @@ public class HealthHolder : MonoBehaviour
     #region Hearts
     [Header("HeartContainer")]
     public GameObject[] hearts;
-
-    public int Health
-    {
-        get { return _currentPlayerHealth; }
-        set { _currentPlayerHealth = value; }
-    }
-
     #endregion
 
     #region PlayerStats
@@ -22,6 +15,11 @@ public class HealthHolder : MonoBehaviour
     private int _currentPlayerHealth;
     private int _maxPlayerHealth;
     #endregion
+    public int Health
+    {
+        get { return _currentPlayerHealth; }
+        set { _currentPlayerHealth = value; }
+    }
 
     void Start()
     {

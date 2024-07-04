@@ -5,9 +5,7 @@ using TMPro;
 
 public class CoinCounter : MonoBehaviour
 {
-
     #region Attributes
-    [SerializeField]
     private int _coinCounter = 0;
     #endregion
 
